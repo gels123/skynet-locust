@@ -174,11 +174,9 @@ end
 -- 倒计时: 定时mysql断线重连
 function playerDataTimer:onTimerMysqlReconnect()
     local xpcallOk, ok = xpcall(function ()
-        local confDBSvr = svrAddrMgr.getSvr(svrAddrMgr.confDBSvr)
-        skynet.call(confDBSvr, "lua", "reconnect", dbconf.mysql_confdb)
-        local gameDBSvr = svrAddrMgr.getSvr(svrAddrMgr.gameDBSvr)
-        skynet.call(gameDBSvr, "lua", "reconnect", dbconf.mysql_gamedb)
-        return skynet.call(gameDBSvr, "lua", "testconnect")
+        local dbSvr = svrAddrMgr.getSvr(svrAddrMgr.dbSvr)
+        skynet.call(dbSvr, "lua", "reconnect", dbconf.mysql_db)
+        return skynet.call(dbSvr, "lua", "testconnect")
     end, svrFunc.exception)
     Log.i("playerDataTimer:onTimerMysqlReconnect xpcallOk=", xpcallOk, "ok=", ok)
     if not xpcallOk or not ok then

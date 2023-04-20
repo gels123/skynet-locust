@@ -20,7 +20,6 @@ function commonLib:getAddress(id)
     if dbconf.globalnodeid then -- global服使用本文件
         return svrAddrMgr.getSvr(svrAddrMgr.commonSvr, dbconf.globalnodeid, self:svrIdx(id))
     else -- 非global服使用本文件
-        local globalnodeid = initDBConf:hashGlobalCluster(id)
         return svrConf:getSvrProxy(globalnodeid, svrAddrMgr.getSvrName(svrAddrMgr.commonSvr, globalnodeid, self:svrIdx(id)))
     end
 end

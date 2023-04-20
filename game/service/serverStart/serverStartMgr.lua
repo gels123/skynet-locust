@@ -18,8 +18,6 @@ function serverStartMgr:ctor()
 	-- 是否停服中
 	self.stoping = false
 
-	-- 协议服务
-	self.mapStartedService[svrAddrMgr.getSvrName(svrAddrMgr.sprotoSvr)] = false
 	-- 数据中心服务
 	--local playerDataLib = require("playerDataLib")
 	--for i = 1, playerDataLib.serviceNum do
@@ -39,6 +37,9 @@ end
 
 -- 获取是否所有服均已初始化好
 function serverStartMgr:getIsOk()
+	if not next(self.mapStartedService) then
+		return true
+	end
 	return self.isOk
 end
 

@@ -43,7 +43,7 @@ local openServerTime = {}
 function svrFunc.getOpenServerTime(kingdomId)
     if not openServerTime[kingdomId] then
         local openDateSql = "select startTime from conf_kingdom where kid = " .. kingdomId
-        local openDate = skynet.call(svrAddrMgr.getSvr(svrAddrMgr.confDBSvr), "lua", "execute", openDateSql)
+        local openDate = skynet.call(svrAddrMgr.getSvr(svrAddrMgr.dbSvr), "lua", "execute", openDateSql)
         if nil ~= openDate and nil ~= openDate[1] and nil ~= openDate[1].startTime then
             openServerTime[kingdomId] = svrFunc.convertStrTime2OsTime(openDate[1].startTime)
         else    -- 如果发生异常则把当前时间当成开服时间

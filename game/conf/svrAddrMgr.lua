@@ -6,13 +6,9 @@ local svrAddrMgr = {}
 
 --------------------------- 服务名称 BEGIN -------------------------
 -- 配置数据DB服务名称
-svrAddrMgr.confDBSvr = ".mysql_confdb"
--- 游戏数据DB服务名称
-svrAddrMgr.gameDBSvr = ".mysql_gamedb"
+svrAddrMgr.dbSvr = ".dbSvr"
 -- 本地REDIS服务名称
 svrAddrMgr.redisSvr = ".redisSvr"
--- 公共REDIS服务名称
-svrAddrMgr.publicRedisSvr = ".publicRedisSvr"
 -- 日志服务名称
 svrAddrMgr.newLoggerSvr = ".newLoggerSvr"
 -- 报错信息通知服务名称
@@ -21,14 +17,8 @@ svrAddrMgr.alertSvr = ".alertSvr"
 svrAddrMgr.startSvr = ".startSvr"
 -- 公共服务名称
 svrAddrMgr.commonSvr = ".commonSvr@%d@%d"
--- 启动服务名称(游戏服)
-svrAddrMgr.startSvrGame = ".startSvr@%d"
--- 登陆服务名称
-svrAddrMgr.loginMasterSvr = ".loginMasterSvr"
 -- 数据中心服务
 svrAddrMgr.dataCenterSvr = ".dataCenterSvr@%d@%d"
--- 网关服务名称
-svrAddrMgr.gateSvr = ".gateSvr@%d"
 -- 协议共享服务名称
 svrAddrMgr.sprotoSvr = ".sprotoSvr"
 --------------------------- 服务名称 END ---------------------------

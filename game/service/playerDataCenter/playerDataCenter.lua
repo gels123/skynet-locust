@@ -170,8 +170,8 @@ function playerDataCenter:query(id, module, multi, isForce)
                 self:dealMysqlTask(id, module)
                 -- 查询mysql
                 local ok, ret = xpcall(function ()
-                    local gameDBSvr = svrAddrMgr.getSvr(svrAddrMgr.gameDBSvr)
-                    return skynet.call(gameDBSvr, "lua", "execute", sql)
+                    local dbSvr = svrAddrMgr.getSvr(svrAddrMgr.dbSvr)
+                    return skynet.call(dbSvr, "lua", "execute", sql)
                 end, svrFunc.exception)
                 if not ok then -- mysql宕机, 中断执行
                     error(string.format("playerDataCenter:query error2: kid=%s, id=%s, module=%s", kid, id, module))
@@ -496,8 +496,8 @@ end
 function playerDataCenter:executeSql(sql)
     Log.d("playerDataCenter:executeSql sql=", sql)
     assert(type(sql) == "string")
-    local gameDBSvr = svrAddrMgr.getSvr(svrAddrMgr.gameDBSvr)
-    return skynet.call(gameDBSvr, "lua", "execute", sql)
+    local dbSvr = svrAddrMgr.getSvr(svrAddrMgr.dbSvr)
+    return skynet.call(dbSvr, "lua", "execute", sql)
 end
 
 -- 执行sql(安全的)
@@ -507,8 +507,8 @@ function playerDataCenter:executeSqlSafe(sql, id, module)
     assert(type(sql) == "string")
     --
     local ok, ret = xpcall(function ()
-        local gameDBSvr = svrAddrMgr.getSvr(svrAddrMgr.gameDBSvr)
-        return skynet.call(gameDBSvr, "lua", "execute", sql)
+        local dbSvr = svrAddrMgr.getSvr(svrAddrMgr.dbSvr)
+        return skynet.call(dbSvr, "lua", "execute", sql)
     end, svrFunc.exception)
     -- Log.dump(ret, "playerDataCenter:executeSqlSafe ret=", 10)
     if not ok or not ret or ret.err then
