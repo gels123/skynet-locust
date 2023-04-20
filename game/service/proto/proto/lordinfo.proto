@@ -1,0 +1,9 @@
+syntax = "proto3";
+package lordinfo;
+
+message InitData
+{
+	uint64 uid = 1; 		// 玩家ID
+	string nickName = 2; 	// 玩家昵称
+	uint32 level = 3;		// 玩家等级
+}

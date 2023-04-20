@@ -1,0 +1,14 @@
+################################### pvp战场模块协议[51-100] ###################################
+#请求创建战场(测试用)
+reqCreatePvpBattle 51 {
+    request {
+        uid 0 : integer
+        battleId 1 : integer
+        uids 2 : *integer
+	}
+	response {
+		code 0 : integer
+		battleId 1 : integer
+        uids 2 : *integer
+	}
+}

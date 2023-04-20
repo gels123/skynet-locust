@@ -1,0 +1,47 @@
+################################### 登陆协议[1-50] ###################################
+#推送登出
+notifyLogout 50 {
+    request {
+        flag 0 : integer #0=断网 1=抢号踢出 2=请求afk 3=请求离线 4=链路超时
+    }
+}
+
+#推送服务器维护
+notifyMaintain 49 {
+    request {
+        status 0 : integer #1=正常, 2=维护
+    }
+}
+
+#推送测试
+notifyTest1 31 {
+    request {
+        num 0 : integer
+        str 1 : string
+        array 2 : *sPos
+    }
+}
+
+notifyTest2 32 {
+    request {
+        num 0 : integer
+        str 1 : string
+        array 2 : *sLordInfo
+    }
+}
+
+notifyTest3 33 {
+    request {
+        num 0 : integer
+        str 1 : string
+        isOk 2 : boolean
+    }
+}
+
+notifyTest4 34 {
+    request {
+        num 0 : integer
+        str 1 : string
+        array 2 : *sItemInfo
+    }
+}

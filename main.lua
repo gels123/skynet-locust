@@ -65,19 +65,23 @@ skynet.start(function ()
     skynet.newservice("serverStartService")
     Log.i("====== main start 10 =======")
 
-    -- 数据中心服务
-    local playerDataLib = require("playerDataLib")
-    for i = 1, playerDataLib.serviceNum do
-        skynet.newservice("playerDataService", dbconf.globalnodeid, i)
-    end
+    -- 协议共享服务
+    skynet.newservice("protoService")
     Log.i("====== main start 11 =======")
 
-    -- 公共杂项服务
-    local commonLib = require("commonLib")
-    for i = 1, commonLib.serviceNum do
-        skynet.newservice("commonService", dbconf.globalnodeid, i)
-    end
+    -- 数据中心服务
+    --local playerDataLib = require("playerDataLib")
+    --for i = 1, playerDataLib.serviceNum do
+    --    skynet.newservice("playerDataService", dbconf.globalnodeid, i)
+    --end
     Log.i("====== main start 12 =======")
+
+    -- 公共杂项服务
+    --local commonLib = require("commonLib")
+    --for i = 1, commonLib.serviceNum do
+    --    skynet.newservice("commonService", dbconf.globalnodeid, i)
+    --end
+    Log.i("====== main start 13 =======")
 
     -- 标记启动成功并生成文件
     if require("serverStartLib"):getIsOk() then

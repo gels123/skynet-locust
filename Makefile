@@ -125,8 +125,6 @@ clean:
 	cd ./game/lib/lua-hmac_sha256;make clean
 	@echo "========== clean lua-hmac_sha256 end =========="
 
-
-
 help:
 	@echo "  * linux"
 	@echo "  * macosx"

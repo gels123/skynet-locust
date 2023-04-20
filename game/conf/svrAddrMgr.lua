@@ -29,6 +29,8 @@ svrAddrMgr.loginMasterSvr = ".loginMasterSvr"
 svrAddrMgr.dataCenterSvr = ".dataCenterSvr@%d@%d"
 -- 网关服务名称
 svrAddrMgr.gateSvr = ".gateSvr@%d"
+-- 协议共享服务名称
+svrAddrMgr.sprotoSvr = ".sprotoSvr"
 --------------------------- 服务名称 END ---------------------------
 
 --------------------------- 服务地址操作 API BEGIN -------------------------

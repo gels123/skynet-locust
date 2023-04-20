@@ -3,7 +3,6 @@
 ]]
 local skynet = require("skynet")
 local mc = require("multicast")
-local svrAddrMgr = require("svrAddrMgr")
 local lextra = require("lextra")
 local serverStartCenter = require("serverStartCenter"):shareInstance()
 local serverStartMgr = class("serverStartMgr")
@@ -19,16 +18,18 @@ function serverStartMgr:ctor()
 	-- 是否停服中
 	self.stoping = false
 
+	-- 协议服务
+	self.mapStartedService[svrAddrMgr.getSvrName(svrAddrMgr.sprotoSvr)] = false
 	-- 数据中心服务
-	local playerDataLib = require("playerDataLib")
-	for i = 1, playerDataLib.serviceNum do
-		self.mapStartedService[svrAddrMgr.getSvrName(svrAddrMgr.dataCenterSvr, dbconf.globalnodeid, i)] = false
-	end
-	-- 公共杂项服务
-	local commonLib = require("commonLib")
-	for i = 1, commonLib.serviceNum do
-		self.mapStartedService[svrAddrMgr.getSvrName(svrAddrMgr.commonSvr, dbconf.globalnodeid, i)] = false
-	end
+	--local playerDataLib = require("playerDataLib")
+	--for i = 1, playerDataLib.serviceNum do
+	--	self.mapStartedService[svrAddrMgr.getSvrName(svrAddrMgr.dataCenterSvr, dbconf.globalnodeid, i)] = false
+	--end
+	---- 公共杂项服务
+	--local commonLib = require("commonLib")
+	--for i = 1, commonLib.serviceNum do
+	--	self.mapStartedService[svrAddrMgr.getSvrName(svrAddrMgr.commonSvr, dbconf.globalnodeid, i)] = false
+	--end
 end
 
 -- 获取频道

@@ -1,0 +1,8 @@
+syntax = "proto3";
+package login;
+
+message LoginInitData
+{
+  uint64 uid = 1; //玩家ID
+  lordinfo.InitData lordData = 2; //领主信息
+}

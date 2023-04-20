@@ -12,6 +12,7 @@ path =
 	"game/service/alertService/?.lua;" ..
 	"game/service/playerDataCenter/?.lua;" ..
 	"game/service/serverStart/?.lua;" ..
+	"game/service/proto/?.lua;" ..
 	"game/service/common/?.lua;" ..
 	"game/lib/?.lua;" ..
 	"game/lib/quickframework/?.lua;" ..
