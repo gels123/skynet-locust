@@ -16,7 +16,9 @@ local wsport
 
 local function http_response(id, write, ...)
 	local ok, err = httpd.write_response(write, ...)
-	if not ok then skynet.error(string.format("fd = %d, %s", id, err)) end
+	if not ok then
+        skynet.error(string.format("fd = %d, %s", id, err))
+    end
 end
 
 local function do_http_request(sock, addr)
@@ -55,7 +57,7 @@ local function do_http_request(sock, addr)
 end
 
 function runner.broadcast(type, body)
-    local msg = json.encode {type = type, body = body}
+    local msg = json.encode({type = type, body = body})
     for _, sock in pairs(ws_socks) do 
         websocket.write(sock, msg) 
     end
