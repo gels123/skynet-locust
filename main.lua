@@ -2,6 +2,7 @@
     main函数
 ]]
 local skynet = require("skynet")
+local snax = require("skynet.snax")
 local cluster = require("cluster")
 local dbconf = require("dbconf")
 local initDBConf = require("initDBConf")
@@ -63,12 +64,11 @@ skynet.start(function ()
     --end
     Log.i("====== main start 10 =======")
 
-    -- 公共杂项服务
-    --local commonLib = require("commonLib")
-    --for i = 1, commonLib.serviceNum do
-    --    skynet.newservice("commonService", dbconf.globalnodeid, i)
-    --end
-    Log.i("====== main start 12 =======")
+    local web = snax.uniqueservice("web")
+    Log.i("====== main start 13 =======")
+
+    --local logger_addr = skynet.localname ".logger"
+    --skynet.call(logger_addr, 'lua', 'webservice', web.handle)
 
     -- 标记启动成功并生成文件
     if require("serverStartLib"):getIsOk() then

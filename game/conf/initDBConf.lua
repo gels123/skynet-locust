@@ -84,7 +84,7 @@ end
 
 -- 刷库
 function initDBConf:executeDbSql()
-    local sql = io.readfile("locustdata.sql")
+    local sql = io.readfile("locust.sql")
     Log.d("initDBConf:executeDbSql sql=", sql)
     local dbSvr = require("svrAddrMgr").getSvr(svrAddrMgr.dbSvr)
     local ret = skynet.call(dbSvr, "lua", "execute", sql)

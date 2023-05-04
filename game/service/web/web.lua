@@ -1,17 +1,16 @@
 local skynet = require "skynet"
 local runner = require "runner"
 local dataset = require "dataset"
-local queue = require "skynet.queue"
+local skynetqueue = require "skynet.queue"
 
-local lock_counter
-local lock_stats
+local sq_counter
+local sq_stats
 
 function init()
-    lock_counter = queue()
-    lock_stats = queue()
-    local http_port = skynet.getenv('http_port') or 8001
-    local ws_port = skynet.getenv('ws_port') or 8002
-    runner.start(http_port, ws_port)
+    sq_counter = skynetqueue()
+    sq_stats = skynetqueue()
+    local conf = require("initDBConf"):getClusterConf(dbconf.nodeid)
+    runner.start(conf.porthttp, conf.portwebsock)
 end
 
 function accept.broadcast(type, body)
@@ -20,7 +19,7 @@ end
 
 function response.stats_service(method, name)
     local addr
-    lock_stats(function()
+    sq_stats(function()
     addr = dataset.stats_service(method, name)
     end)
     return addr
@@ -28,7 +27,7 @@ end
 
 function response.counter_service(name)
     local addr
-    lock_counter(function()
+    sq_counter(function()
     addr = dataset.counter_service(name)
     end)
     return addr

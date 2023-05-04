@@ -17,10 +17,12 @@ svrAddrMgr.alertSvr = ".alertSvr"
 svrAddrMgr.startSvr = ".startSvr"
 -- 公共服务名称
 svrAddrMgr.commonSvr = ".commonSvr@%d@%d"
--- 数据中心服务
+-- 数据中心服务名称
 svrAddrMgr.dataCenterSvr = ".dataCenterSvr@%d@%d"
 -- 协议共享服务名称
 svrAddrMgr.sprotoSvr = ".sprotoSvr"
+-- web服务名称
+svrAddrMgr.webSvr = ".webSvr"
 --------------------------- 服务名称 END ---------------------------
 
 --------------------------- 服务地址操作 API BEGIN -------------------------

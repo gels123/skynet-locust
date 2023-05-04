@@ -4,7 +4,6 @@
 require "quickframework.init"
 require "svrFunc"
 require "configInclude"
-require "sharedataLib"
 require("cluster")
 local skynet = require "skynet"
 local lextra = require "lextra"

@@ -13,14 +13,15 @@ path =
 	"game/service/playerDataCenter/?.lua;" ..
 	"game/service/serverStart/?.lua;" ..
 	"game/service/proto/?.lua;" ..
-	"game/service/common/?.lua;" ..
+	"game/service/web/?.lua;" ..
 	"game/lib/?.lua;" ..
 	"game/lib/quickframework/?.lua;" ..
 	"game/lib/lua-json/?.lua;" ..
 	"game/lib/lua-lfs/?.lua;" ..
 	"game/lib/lua-zset/?.lua;" ..
 	"game/lib/lua-hmac_sha256/?.lua;" ..
-	"game/lib/lua-conhash/?.lua;"
+	"game/lib/lua-conhash/?.lua;" ..
+	"game/lib/lua-resty-template/lib/?.lua;"
 
 
 
@@ -53,5 +54,6 @@ lualoader = "./skynet/lualib/loader.lua"
 luaservice = "./skynet/service/?.lua;" .. path
 cluster = "./game/conf/clusterconf.lua"
 preload = "./game/preload.lua"
+snax = "./game/service/web/?.lua;"
 -- snax = root.."examples/?.lua;"..root.."test/?.lua"
 -- daemon = "./skynet.pid"
