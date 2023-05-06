@@ -1,42 +1,35 @@
+--[[
+    web服务
+--]]
+require("quickframework.init")
+require("cluster")
+require("svrFunc")
 local skynet = require "skynet"
-local runner = require "runner"
-local dataset = require "dataset"
-local skynetqueue = require "skynet.queue"
+local profile = require "skynet.profile"
+local webCenter = require("webCenter"):shareInstance()
 
-local sq_counter
-local sq_stats
+local ti = {}
 
-function init()
-    sq_counter = skynetqueue()
-    sq_stats = skynetqueue()
-    local conf = require("initDBConf"):getClusterConf(dbconf.nodeid)
-    runner.start(conf.porthttp, conf.portwebsock)
-end
+skynet.start(function()
+    skynet.dispatch("lua", function(session, source, cmd, ...)
+        --Log.d("webCenter cmd enter => ", session, source, cmd, ...)
+        profile.start()
 
-function accept.broadcast(type, body)
-    runner.broadcast(type, body)
-end
+        webCenter:dispatchCmd(session, source, cmd, ...)
 
-function response.stats_service(method, name)
-    local addr
-    sq_stats(function()
-    addr = dataset.stats_service(method, name)
+        local time = profile.stop()
+        if time > 1 then
+            Log.w("webCenter:dispatchCmd timeout time=", time, " cmd=", cmd, ...)
+            if not ti[cmd] then
+                ti[cmd] = {n = 0, ti = 0}
+            end
+            ti[cmd].n = ti[cmd].n + 1
+            ti[cmd].ti = ti[cmd].ti + time
+        end
     end)
-    return addr
-end
+    -- 设置本服地址
+    svrAddrMgr.setSvr(skynet.self(), svrAddrMgr.webSvr)
+    -- 初始化
+    skynet.call(skynet.self(), "lua", "init")
+end)
 
-function response.counter_service(name)
-    local addr
-    sq_counter(function()
-    addr = dataset.counter_service(name)
-    end)
-    return addr
-end
-
-function accept.report_stats(...)
-    dataset.report_stats(...)
-end
-
-function accept.report_counter(...)
-    dataset.report_counter(...)
-end

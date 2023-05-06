@@ -82,9 +82,15 @@ function dataset.report()
             last.ninetieth_response_time = last.ninetieth_response_time + stat.ninetieth_response_time
             last.num_requests = last.num_requests + stat.num_requests
             last.num_failures = last.num_failures + stat.num_failures
-            if last.min_response_time == 0 then last.min_response_time = stat.min_response_time end
-            if last.min_response_time > stat.min_response_time then last.min_response_time = stat.min_response_time end
-            if last.max_response_time < stat.max_response_time then last.max_response_time = stat.max_response_time end
+            if last.min_response_time == 0 then
+                last.min_response_time = stat.min_response_time
+            end
+            if last.min_response_time > stat.min_response_time then
+                last.min_response_time = stat.min_response_time
+            end
+            if last.max_response_time < stat.max_response_time then
+                last.max_response_time = stat.max_response_time
+            end
             table.insert(newstats, stat)
         end 
     end
@@ -112,24 +118,30 @@ function dataset.report_stats(data)
     data.safe_name = data.name
     local method = data.method
     local name = data.name
-    if not stats[method] then stats[method] = {} end
+    if not stats[method] then
+        stats[method] = {}
+    end
     stats[method][name] = data
 end
 
 function dataset.counter_service(name)
     local s = counter_addr[name]
-    if s then return s.handle end
-    local s = snax.newservice('counter', name)
-    counter_addr[name] = s
+    if not s then
+        s = snax.newservice('counter', name)
+        counter_addr[name] = s
+    end
     return s.handle
 end
 
 function dataset.stats_service(method, name)
-    if not stats_addr[method] then stats_addr[method] = {} end
+    if not stats_addr[method] then
+        stats_addr[method] = {}
+    end
     local s = stats_addr[method][name]
-    if s then return s.handle end
-    s = snax.newservice('stats',method, name)
-    stats_addr[method][name] = s
+    if not s then
+        s = snax.newservice('stats', method, name)
+        stats_addr[method][name] = s
+    end
     return s.handle
 end
 

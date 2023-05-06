@@ -64,11 +64,8 @@ skynet.start(function ()
     --end
     Log.i("====== main start 10 =======")
 
-    local web = snax.uniqueservice("web")
+    skynet.uniqueservice("web")
     Log.i("====== main start 13 =======")
-
-    --local logger_addr = skynet.localname ".logger"
-    --skynet.call(logger_addr, 'lua', 'webservice', web.handle)
 
     -- 标记启动成功并生成文件
     if require("serverStartLib"):getIsOk() then

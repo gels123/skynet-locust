@@ -3,15 +3,16 @@ local skynet = require "skynet"
 
 local script, host, uid = ...
 uid = tonumber(uid)
+assert(script and host and uid)
 
-_G.agent = {
+require(script)
+
+_G.agent =
+{
     uid = uid,
     host = host
 }
-
 _G.console = require "console"
-
-require(script)
 
 local CMD = {}
 

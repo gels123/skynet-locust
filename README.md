@@ -1,4 +1,4 @@
-# snlocust
+# sn-locust
 ## Description
 A high performence load test tool, implement with [skynet](https://github.com/cloudwu/skynet) and [locust](https://github.com/locustio/locust).
 
@@ -18,6 +18,8 @@ make macosx
 
 ## run
 ```
-./start.sh
+1. execute locust.sql first
+2. check dbconf.lua is all right
+3. start in shell => ./start.sh
 ```
-open the browser with default url http://127.0.0.1:8001 
+open the browser with default url http://127.0.0.1:7001 

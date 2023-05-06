@@ -1,44 +1,49 @@
-local template = require "resty.template"
-local runner = require "runner"
+--[[
+    web路由
+--]]
 local skynet = require "skynet"
+local codecache = require "skynet.codecache"
+local template = require "resty.template"
+local lfs = require "lfs"
 local json = require "dkjson"
 local dataset = require "dataset"
-local lfs = require "lfs"
-local codecache = require "skynet.codecache"
+local webCenter = require("webCenter"):shareInstance()
+local route = class("route")
 
-local SETTING_FILE = skynet.getenv('setting_path') or 'setting.json'
-local HEADER_JSON = {['content-type'] = 'application/json;charset=utf-8'}
-local STATE = { READY = 'ready', HATCHING = 'hatching', RUNNING = 'running', STOPPING = 'stopping', STOPPED = 'stopped'}
-local script_path = skynet.getenv('script_path') or 'game/service/script'
-local static_path = skynet.getenv('static_path') or "game/static"
-local route = {}
+local setting_file_path = "./setting.json"
+local header = {['content-type'] = 'application/json;charset=utf-8'}
+local STATE = {READY = 'ready', HATCHING = 'hatching', RUNNING = 'running', STOPPING = 'stopping', STOPPED = 'stopped'}
+local script_path = 'game/service/script'
+local static_path = "game/static"
+
 local state = STATE.READY
 local operation_ver = 0
-local _config
+local _config = nil
 
 local function config(cfg)
-    if not cfg then -- get
-        if _config then return _config end
-        local f = io.open(SETTING_FILE, 'rb')
-        if f then
-            _config = json.decode(f:read('*a'))
-            f:close()
+    if cfg then -- set
+        if not _config then
+            _config = {}
         end
-        _config = _config or {}
-        _config.first_id = _config.first_id or 1
-        _config.num_users = _config.num_users or 1
-        _config.hatch_rate = _config.hatch_rate or 1
-        _config.host = _config.host or '127.0.0.1:8888'
-        _config.script = _config.script or ''
-    else -- set
-        _config = _config or {}
-        for k, v in pairs(cfg) do
-            _config[k] = v
-        end
-        local f = io.open(SETTING_FILE, 'wb')
+        table.merge(_config, cfg)
+        local f = io.open(setting_file_path, 'wb')
         if f then
             f:write(json.encode(_config))
             f:close()
+        end
+    else -- get
+        if not _config then
+            local f = io.open(setting_file_path, 'rb')
+            if f then
+                _config = json.decode(f:read('*a'))
+                f:close()
+            end
+            _config = {}
+            _config.first_id = _config.first_id or 1
+            _config.num_users = _config.num_users or 1
+            _config.hatch_rate = _config.hatch_rate or 1
+            _config.host = _config.host or '127.0.0.1:26000'
+            _config.script = _config.script or ''
         end
     end
     return _config
@@ -64,12 +69,12 @@ route['/'] = function()
     local options = {
         state = state,
         first_id = cfg.first_id,
-        user_count = runner.agent_count(),
+        user_count = webCenter:get_agent_count(),
         version = 1,
         num_users = cfg.num_users,
         hatch_rate = cfg.hatch_rate,
         host = cfg.host,
-        wsport = runner.wsport(),
+        wsport = webCenter:get_wsport(),
         scripts = scripts,
         script = cfg.script,
         static_path = static_path,
@@ -88,24 +93,26 @@ route['/swarm'] = function(body)
         hatch_rate = tonumber(body.hatch_rate or 1) // 1
     })
 
-    runner.stop_agent()
+    webCenter:stop_agent()
     dataset.reset()
     codecache.clear()
 
     local script = string.sub(cfg.script,1,-5) -- cut .lua
     skynet.fork(function()
-        runner.run_agent(operation_ver, cfg.first_id, cfg.num_users, cfg.hatch_rate, cfg.host, script, function()
+        webCenter:run_agent(operation_ver, cfg.first_id, cfg.num_users, cfg.hatch_rate, cfg.host, script, function()
             state = STATE.RUNNING
         end)
     end)
     state = STATE.HATCHING
     local res = json.encode({success = true, script = cfg.script})
-    return 200, res, HEADER_JSON
+    return 200, res, header
 end
 
 route['/stop'] = function()
     skynet.fork(function()
-        runner.stop_agent(function() state = STATE.STOPPED end)
+        webCenter:stop_agent(function()
+            state = STATE.STOPPED
+        end)
     end)
     state = STATE.STOPPING
     return 200
@@ -127,20 +134,25 @@ end
 route['/stats/requests'] = function()
     local report = dataset.report()
     report.state = state
-    report.user_count = runner.agent_count()
-    return 200, json.encode(report), HEADER_JSON
+    report.user_count = webCenter:get_agent_count()
+    return 200, json.encode(report), header
 end
 
 route['/exceptions'] = function()
     local exceptions = {}
-    return 200, json.encode({exceptions = exceptions}), HEADER_JSON
+    return 200, json.encode({exceptions = exceptions}), header
 end
 
 route['/exceptions/csv'] = function()
     return 200
 end
 
-function route.hatching() return state == STATE.HATCHING end
-function route.old_operation(ver) return operation_ver ~= ver end
+function route.hatching()
+    return state == STATE.HATCHING
+end
+
+function route.old_operation(ver)
+    return operation_ver ~= ver
+end
 
 return route
