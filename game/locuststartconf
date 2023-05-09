@@ -14,6 +14,8 @@ path =
 	"game/service/serverStart/?.lua;" ..
 	"game/service/proto/?.lua;" ..
 	"game/service/web/?.lua;" ..
+	"game/service/script/?.lua;" ..
+	"game/service/script/simulate/?.lua;" ..
 	"game/lib/?.lua;" ..
 	"game/lib/quickframework/?.lua;" ..
 	"game/lib/lua-json/?.lua;" ..

@@ -1,9 +1,13 @@
 local skynet = require "skynet"
 local util = {}
 
-function util.uid() return agent.uid end
+function util.uid()
+    return agent.uid
+end
 
-function util.host() return agent.host end
+function util.host()
+    return agent.host
+end
 
 function util.address()
     local host = util.host()
@@ -13,14 +17,11 @@ function util.address()
     return ip, port
 end
 
-function util.log(...) return skynet.error(agent.uid, ...) end
-
 function util.random(a, b)
   if not a then a, b = 0, 1 end
   if not b then b = 0 end
   return a + math.random() * (b - a)
 end
-
 
 function util.weightedchoice(t)
   local sum = 0
@@ -43,8 +44,9 @@ function util.run(class, fweight, min_interval, max_interval)
     local interval = math.random(min_interval, max_interval) * 100
     interval = interval // 1
     skynet.timeout(interval, function()
-      fun()
-      util.run(class, fweight, min_interval, max_interval)
+        --Log.d("util.run loop")
+        fun()
+        util.run(class, fweight, min_interval, max_interval)
     end)
 end
 

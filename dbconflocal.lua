@@ -30,7 +30,7 @@ dbconf.robotTag = "locust"
 --dbconf.robotUrl = "https://oapi.dingtalk.com/robot/send?access_token=9848749207a29936a54e559b77be02c9293f5c04e90c6601776fc87b6bd39663"
 
 -- 是否开启调试
-dbconf.DEBUG = true
+dbconf.DEBUG = false
 
 -- 是否开启后台
 dbconf.BACK_DOOR = true

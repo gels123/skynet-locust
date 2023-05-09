@@ -1,4 +1,4 @@
-require("quickinit")
+require("quickframework.init")
 local skynet = require "skynet"
 
 local script, host, uid = ...
@@ -12,14 +12,14 @@ _G.agent =
     uid = uid,
     host = host
 }
-_G.console = require "console"
 
 local CMD = {}
 
 function CMD.exit()
-    if type(_G.exit) == 'function' then
-        _G.exit()
-    end
+    --if type(_G.exit) == 'function' then
+    --    _G.exit()
+    --end
+    skynet.exit()
 end
 
 skynet.start(function()
@@ -29,7 +29,7 @@ skynet.start(function()
     end)
     skynet.fork(function()
         if type(_G.main) == "function" then
-            _G.main(uid, host)
+            _G.main(host, uid)
         end
     end)
 end)

@@ -8,7 +8,7 @@ local httpd = require "http.httpd"
 local sockethelper = require "http.sockethelper"
 local websocket = require "http.websocket"
 local urllib = require "http.url"
-local json = require "dkjson"
+local json = require "json"
 local dataset = require "dataset"
 local serviceCenterBase = require("serviceCenterBase2")
 local webCenter = class("webCenter", serviceCenterBase)
@@ -54,6 +54,7 @@ function webCenter:start()
 
     local wsock = socket.listen("0.0.0.0", self.wsport)
     socket.start(wsock, function(fd, addr)
+        Log.d("webCenter:start connet...", fd, addr)
         local handle = {}
 
         function handle.connect(fd)
@@ -181,7 +182,7 @@ function webCenter:run_agent(ver, id_start, id_count, per_sec, host, script, cb)
         Log.w("webCenter:run_agent failed ver=", ver, "id_start=", id_start, "id_count=", id_count, "per_sec=", per_sec, "host=", host, "script=", script, "cb=", cb)
         return
     end
-    if not self.route or self.route.old_operation(ver) then -- expire operation
+    if self.route.old_operation(ver) then -- expire operation
         Log.w("webCenter:run_agent failed ver=", ver, "id_start=", id_start, "id_count=", id_count, "per_sec=", per_sec, "host=", host, "script=", script, "cb=", cb)
         return
     end
@@ -202,7 +203,7 @@ function webCenter:run_agent(ver, id_start, id_count, per_sec, host, script, cb)
         return cb()
     else
         skynet.timeout(100, function()
-            webCenter:run_agent(ver, id, id_count, per_sec, host, script, cb)
+            self:run_agent(ver, id, id_count, per_sec, host, script, cb)
         end)
     end
 end

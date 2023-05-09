@@ -7,7 +7,7 @@ if skynet.getenv "daemon" then
     {
         console = false,
         level = 0, -- DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3, FATAL = 4
-        filename = "global_debug",
+        filename = "locust_debug",
         path = "./log",
         maxsize = 1024000000,
     }
@@ -17,7 +17,7 @@ if skynet.getenv "daemon" then
     {
         console = false,
         level = 1, -- DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3, FATAL = 4
-        filename = "global_release",
+        filename = "locust_release",
         path = "./log",
         maxsize = 1024000000,
     }
@@ -27,7 +27,7 @@ else
     {
         console = true,
         level = 0, -- DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3, FATAL = 4
-        filename = "global_debug",
+        filename = "locust_debug",
         path = "./log",
         maxsize = 1024000000,
     }
@@ -37,7 +37,7 @@ else
     {
         console = true,
         level = 1, -- DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3, FATAL = 4
-        filename = "global_release",
+        filename = "locust_release",
         path = "./log",
         maxsize = 1024000000,
     }

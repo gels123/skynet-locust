@@ -1,9 +1,8 @@
 local skynet = require "skynet"
-local snax = require "skynet.snax"
+local svrAddrMgr = require "svrAddrMgr"
 
 local CACHE_LASTEST_RES_TIME = 100
 local REPORT_DELAY = 100
-local web
 
 local hold = false
 local reqs = {}
@@ -53,13 +52,16 @@ local function report()
         tmp_fail = 0
         local tmp = {}
         local size = #lastest_res_time
-        for i = 1, size do table.insert(tmp,lastest_res_time[i]) end
+        for i = 1, size do
+            table.insert(tmp,lastest_res_time[i])
+        end
         table.sort(tmp)
         local idx = math.ceil(size*0.5)
         data.median_response_time = tmp[idx] or 0
         idx = math.ceil(size*0.95)
         data.ninetieth_response_time = tmp[idx] or 0
-        web.post.report_stats(data)
+        local webSvr = svrAddrMgr.getSvr(svrAddrMgr.webSvr)
+        skynet.send(webSvr, "lua", "report_stats", data)
         hold = false
     end)
 end
@@ -70,8 +72,6 @@ function init(_type, _name)
     reset()
     data.name = _name
     data.method = _type
-    -- data.safe_name = _name
-    web = snax.queryservice "web"
 end
 
 function response.reset()
@@ -85,11 +85,16 @@ end
 function accept.endtime(uid, id, size, failed)
     local key = key(uid, id)
     local time = reqs[key]
-    if not time then return skynet.error(data.method, data.name, uid, id, 'no request data.') end
+    if not time then
+        return skynet.error(data.method, data.name, uid, id, 'no request data.')
+    end
     local delay = skynet.now() - time
     total_response_time = total_response_time + delay
-    if data.min_response_time > delay then data.min_response_time = delay end
-    if data.max_response_time < delay then data.max_response_time = delay end
+    if data.min_response_time > delay then
+        data.min_response_time = delay end
+    if data.max_response_time < delay then
+        data.max_response_time = delay
+    end
     if failed then 
         data.num_failures = data.num_failures + 1
         tmp_fail = tmp_fail + 1
@@ -102,6 +107,8 @@ function accept.endtime(uid, id, size, failed)
     data.avg_content_length = total_content_length / total_res
     tmp_reqs = tmp_reqs + 1
     table.insert(lastest_res_time, delay)
-    if #lastest_res_time > CACHE_LASTEST_RES_TIME then table.remove(lastest_res_time, 1) end
+    if #lastest_res_time > CACHE_LASTEST_RES_TIME then
+        table.remove(lastest_res_time, 1)
+    end
     report()
 end

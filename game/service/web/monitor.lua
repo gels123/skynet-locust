@@ -1,27 +1,31 @@
 local skynet = require "skynet"
+local svrAddrMgr = require "svrAddrMgr"
 local snax = require "skynet.snax"
 
 local monitor = {}
 local stats_service = {}
 local counter_service = {}
 local sessions = {}
+
 local function queryservice(name, type)
     local s
     if type then
         if not stats_service[type] then stats_service[type] = {} end
         s = stats_service[type][name]
         if not s then
-            local web = snax.uniqueservice 'web'
-            local addr = web.req.stats_service(type, name)
+            local webSvr = svrAddrMgr.getSvr(svrAddrMgr.webSvr)
+            local addr = skynet.call(webSvr, "lua", "stats_service", type, name)
             s = snax.bind(addr, 'stats')
             stats_service[type][name] = s
         end
         return s
     end
     s = counter_service[name]
-    if s then return s end
-    local web = snax.uniqueservice 'web'
-    local addr = web.req.counter_service(name)
+    if s then
+        return s
+    end
+    local webSvr = svrAddrMgr.getSvr(svrAddrMgr.webSvr)
+    local addr = skynet.call(webSvr, "lua", "counter_service", name)
     s = snax.bind(addr, 'counter')
     counter_service[name] = s
     return s

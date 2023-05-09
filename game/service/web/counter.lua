@@ -1,24 +1,24 @@
 local skynet = require "skynet"
+local svrAddrMgr = require "svrAddrMgr"
 local snax = require "skynet.snax"
 
 local REPORT_DELAY = 200
 local count = 0
 local hold = false
 local name
-local web
 
 local function report()
     if hold then return end
     hold = true
     skynet.timeout(REPORT_DELAY, function()
-        web.post.report_counter(name, count)
+        local webSvr = svrAddrMgr.getSvr(svrAddrMgr.webSvr)
+        skynet.send(webSvr, "lua", "report_counter", name, count)
         hold = false
     end)
 end
 
 function init(_name)
     name = _name
-    web = snax.queryservice "web"
 end
 
 function response.reset()

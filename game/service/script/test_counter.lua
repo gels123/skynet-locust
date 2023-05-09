@@ -1,4 +1,4 @@
-local util = require "common.util"
+local util = require "util"
 local monitor = require "monitor"
 local tests = {}
 

@@ -5,7 +5,7 @@ local skynet = require "skynet"
 local codecache = require "skynet.codecache"
 local template = require "resty.template"
 local lfs = require "lfs"
-local json = require "dkjson"
+local json = require "json"
 local dataset = require "dataset"
 local webCenter = require("webCenter"):shareInstance()
 local route = class("route")
@@ -97,13 +97,13 @@ route['/swarm'] = function(body)
     dataset.reset()
     codecache.clear()
 
+    state = STATE.HATCHING
     local script = string.sub(cfg.script,1,-5) -- cut .lua
     skynet.fork(function()
         webCenter:run_agent(operation_ver, cfg.first_id, cfg.num_users, cfg.hatch_rate, cfg.host, script, function()
             state = STATE.RUNNING
         end)
     end)
-    state = STATE.HATCHING
     local res = json.encode({success = true, script = cfg.script})
     return 200, res, header
 end
@@ -148,6 +148,7 @@ route['/exceptions/csv'] = function()
 end
 
 function route.hatching()
+    --Log.d("route.hatching", state == STATE.HATCHING, state)
     return state == STATE.HATCHING
 end
 

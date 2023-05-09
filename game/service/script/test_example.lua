@@ -9,7 +9,7 @@ cd 3rd/skynet
 package.path = package.path .. "3rd/skynet/examples/?.lua;"
 local proto = require "proto"
 local sproto = require "sproto"
-local util = require "common.util"
+local util = require "util"
 local monitor = require "monitor"
 local skynet = require "skynet"
 local socket = require "skynet.socket"
